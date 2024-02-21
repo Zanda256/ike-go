@@ -19,3 +19,19 @@ type Source struct {
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }
+
+type Downloads struct {
+	ID         uuid.UUID
+	SourceID   uuid.UUID
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	StatusCode int
+	Headers    []byte
+	Body       []byte
+}
+
+type Tag struct {
+	ID         uuid.UUID
+	Name       string
+	created_at time.Time
+}
