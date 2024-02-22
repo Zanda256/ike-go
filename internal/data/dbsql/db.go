@@ -11,13 +11,21 @@ type DB struct {
 	pool *pgxpool.Pool
 }
 
-// get env vars and build db url
+// get env vars and build db url ??
 func NewDB(ctx context.Context, dbUrl string) (*DB, error) { // env.MustGet("DB_URL")
-	pool, err := pgxpool.Connect(ctx)
+	dbPool, err := pgxpool.Connect(ctx, dbUrl)
 	if err != nil {
 		return nil, fmt.Errorf("connect to database: %w", err)
 	}
-	return &DB{pool: pool}, nil
+	return &DB{pool: dbPool}, nil
+}
+
+func (db *DB) InsertSource() {
+
+}
+
+func (db *DB) InsertDownload() {
+
 }
 
 // # Example DSN
