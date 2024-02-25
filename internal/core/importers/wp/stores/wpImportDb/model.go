@@ -1,4 +1,4 @@
-package importers
+package wpImportdb
 
 import (
 	"net/url"
@@ -24,7 +24,7 @@ type Source struct {
 	UpdatedAt    time.Time
 }
 
-func toSource(postURL string) (Source, error) {
+func ToSource(postURL string) (Source, error) {
 	// Parse the URL
 	parsedURL, err := url.Parse(postURL)
 	if err != nil {
@@ -54,7 +54,7 @@ type Download struct {
 	Body       []byte
 }
 
-func toDownload(raw web.Response, sourceID uuid.UUID) Download {
+func ToDownload(raw web.Response, sourceID uuid.UUID) Download {
 	return Download{
 		ID:         uuid.New(),
 		SourceID:   sourceID,

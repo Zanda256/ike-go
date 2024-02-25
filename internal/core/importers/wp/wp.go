@@ -6,21 +6,35 @@ import (
 	"fmt"
 	"net/http"
 
-	db "github.com/Zanda256/ike-go/internal/data/dbsql"
+	wpImportdb "github.com/Zanda256/ike-go/internal/core/importers/wp/stores/wpImportDb"
 	"github.com/Zanda256/ike-go/pkg/logger"
 	"github.com/Zanda256/ike-go/pkg/web"
+	"github.com/google/uuid"
 )
 
+type Storer interface {
+	InsertSource(s wpImportdb.Source) (uuid.UUID, error)
+	InsertDownload(d wpImportdb.Download) (uuid.UUID, error)
+}
+
 type WordPressImporter struct {
-	Storage   *db.DB
+	Storage   Storer
 	webClient *web.ClientProvider
 	log       logger.Logger
+}
+
+func NewWordPressImporter(log logger.Logger, client *web.ClientProvider, store Storer) *WordPressImporter {
+	return &WordPressImporter{
+		Storage:   store,
+		webClient: client,
+		log:       log,
+	}
 }
 
 func (wpi *WordPressImporter) Import(fullURL string, resultsPerPage int) error {
 	page := 1
 	for {
-		url := fmt.Sprintf("%s?page=%d&per_page=&d", fullURL, page, resultsPerPage)
+		url := fmt.Sprintf("%s?page=%d&per_page=%d", fullURL, page, resultsPerPage)
 		resp, err := wpi.webClient.SendRequest(http.MethodGet, url, nil)
 		if err != nil {
 			wpi.log.Error(context.Background(), "error encountered:", err.Error())
@@ -53,14 +67,16 @@ func (wpi *WordPressImporter) fetchAndProcessPost(url string) (string, error) {
 		wpi.log.Error(context.Background(), "error encountered:", err.Error())
 	}
 	// convert URL to source and save it to db
-	source, err := toSource(url)
+	source, err := wpImportdb.ToSource(url)
 	if err != nil {
 		wpi.log.Error(context.Background(), err.Error())
 		return "", err
 	}
+	sid, err := wpi.Storage.InsertSource(source)
 	fmt.Printf("Source ID: %s", source.ID.String())
 	// build the download struct and save it to db
-	download := toDownload(res, source.ID)
+	download := wpImportdb.ToDownload(res, source.ID)
+	did, err := wpi.Storage.InsertDownload(download)
 	fmt.Printf("Download ID: %s", download.ID.String())
-	return fmt.Sprintf("source %s - download %s", source.ID.String(), download.ID.String()), nil
+	return fmt.Sprintf("source %s - download %s", sid.String(), did.String()), nil
 }

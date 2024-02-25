@@ -1,4 +1,4 @@
-package db
+package dbsql
 
 import (
 	"context"
@@ -15,14 +15,6 @@ import (
 
 type DB struct {
 	*pgxpool.Pool
-}
-
-func (db *DB) InsertSource() {
-
-}
-
-func (db *DB) InsertDownload() {
-
 }
 
 // # Example DSN
