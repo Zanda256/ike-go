@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/Zanda256/ike-go/pkg/web"
+	"github.com/Zanda256/ike-go/pkg-foundation/web"
 	"github.com/google/uuid"
 )
 

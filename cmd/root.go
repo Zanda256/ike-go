@@ -9,6 +9,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var cfg = struct {
+	Web struct {
+		Timeout             int
+		MaxIdleConns        int
+		MaxIdleConnsPerHost int
+	}
+	Db struct {
+		User       string
+		Password   string
+		Host       string
+		Name       string
+		DisableTLS bool
+		// connection pool config
+		MaxConns              string
+		MinConns              string
+		MaxConnLifetime       string
+		MaxConnIdleTime       string
+		HealthCheckPeriod     string
+		MaxConnLifetimeJitter string
+	}
+}{}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "ike-go",
@@ -34,6 +56,7 @@ func Execute() {
 }
 
 func init() {
+	cobra.OnInitialize()
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
