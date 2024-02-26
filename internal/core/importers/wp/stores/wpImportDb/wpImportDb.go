@@ -37,7 +37,7 @@ func (st *Store) InsertSource(s Source) (uuid.UUID, error) {
 	}()
 
 	// Prepare the SQL statement
-	_, err = tx.Prepare(ctx, "insert_source", "INSERT INTO sources (id, author_email, raw_url, scheme, host, path, query, active_domain,format, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)")
+	_, err = tx.Prepare(ctx, "insert_source", "INSERT INTO sources (id, author_email, raw_url, scheme, host, path, query, active_domain,\"format\", created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)")
 	if err != nil {
 		return uuid.Nil, err
 	}
