@@ -24,26 +24,11 @@ type Config struct {
 func NewClientProvider(cfg Config) *ClientProvider {
 	client := &http.Client{
 		Transport: &http.Transport{
-			MaxIdleConnsPerHost: func() int {
-				if cfg.MaxIdleConnsPerHost == 0 {
-					return 20
-				}
-				return cfg.MaxIdleConnsPerHost
-			}(), // can configure transport to re-use http connections efficiently
-			MaxIdleConns: func() int {
-				if cfg.MaxIdleConns == 0 {
-					return 20
-				}
-				return cfg.MaxIdleConns
-			}(),
+			MaxIdleConnsPerHost: cfg.MaxIdleConnsPerHost,
+			// can configure transport to re-use http connections efficiently
+			MaxIdleConns: cfg.MaxIdleConns,
 		},
-
-		Timeout: func() time.Duration {
-			if cfg.Timeout == 0 {
-				return 10 * time.Second
-			}
-			return time.Duration(cfg.Timeout) * time.Second
-		}(),
+		Timeout: time.Duration(cfg.Timeout) * time.Second,
 	}
 
 	return &ClientProvider{client: client}

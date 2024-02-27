@@ -4,32 +4,37 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"context"
 	"os"
 
+	"github.com/Zanda256/ike-go/internal/data/dbsql"
+	"github.com/Zanda256/ike-go/pkg-foundation/logger"
+	"github.com/Zanda256/ike-go/pkg-foundation/web"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var cfg = struct {
-	Web struct {
-		Timeout             int
-		MaxIdleConns        int
-		MaxIdleConnsPerHost int
-	}
-	Db struct {
-		User       string
-		Password   string
-		Host       string
-		Name       string
-		DisableTLS bool
-		// connection pool config
-		MaxConns              string
-		MinConns              string
-		MaxConnLifetime       string
-		MaxConnIdleTime       string
-		HealthCheckPeriod     string
-		MaxConnLifetimeJitter string
-	}
+	Web web.Config
+	Db  dbsql.Config
 }{}
+
+var (
+	dbClient   *dbsql.DB
+	httpClient *web.ClientProvider
+	log        *logger.Logger
+
+	traceIDFunc = func(ctx context.Context) string {
+		//return web.GetTraceID(ctx)
+		return "not_set_up_yet"
+	}
+
+	events = logger.Events{
+		Error: func(ctx context.Context, r logger.Record) {
+			log.Info(ctx, "******* SEND ALERT ******")
+		},
+	}
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -55,15 +60,43 @@ func Execute() {
 	}
 }
 
+func initConfig() {
+	// Enable automatic environment variable binding
+	viper.AutomaticEnv()
+
+	// Set default values for Web http client config
+	viper.SetDefault("MAX_IDLE_CONNS", 20)
+	viper.SetDefault("MAX_IDLE_CONNS_PER_HOST", 20)
+	viper.SetDefault("WEB_TIMEOUT", 10)
+
+	// Access the value of Web config
+	cfg.Web.Timeout = viper.GetInt("WEB_TIMEOUT")
+	cfg.Web.MaxIdleConns = viper.GetInt("MAX_IDLE_CONNS")
+	cfg.Web.MaxIdleConnsPerHost = viper.GetInt("MAX_IDLE_CONNS_PER_HOST")
+
+	cfg.Db.DisableTLS = viper.GetBool("DB_DISABLE_TLS")
+	cfg.Db.User = viper.GetString("DB_USER")
+	cfg.Db.Password = viper.GetString("DB_PASSWORD")
+	cfg.Db.Host = viper.GetString("DB_HOST")
+	cfg.Db.Name = viper.GetString("DB_NAME")
+	cfg.Db.Pool.MaxConnIdleTime = viper.GetString("MAX_CONN_IDLE_TIME")
+	cfg.Db.Pool.MaxConnLifetime = viper.GetString("MAX_CONN_LIFE_TIME")
+	cfg.Db.Pool.MaxConnLifetimeJitter = viper.GetString("MAX_CONN_LIFE_TIME_JITTER")
+	cfg.Db.Pool.MaxConns = viper.GetString("MAX_CONNS")
+	cfg.Db.Pool.MinConns = viper.GetString("MIN_CONNS")
+}
+
 func init() {
-	cobra.OnInitialize()
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+	cobra.OnInitialize(initConfig)
+	var err error
+	dbClient, err = dbsql.Open(context.Background(), cfg.Db)
+	if err != nil {
+		os.Exit(1)
+	}
+	if err = dbsql.StatusCheck(context.Background(), dbClient); err != nil {
+		os.Exit(2)
+	}
+	httpClient = web.NewClientProvider(cfg.Web)
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ike-go.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	log = logger.NewWithEvents(os.Stdout, logger.LevelInfo, "ike-go", traceIDFunc, events)
 }
