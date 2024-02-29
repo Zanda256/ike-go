@@ -1,4 +1,4 @@
--- crate a table to maintain last 3 inserted downloads
+-- Create a table to maintain last 3 inserted downloads
 CREATE TABLE downloads_history (
    seq_no INTEGER,
    id UUID,
@@ -11,7 +11,6 @@ CREATE TABLE downloads_history (
 
    PRIMARY KEY (id)
 );
-
 
 -- Create a sequence
 CREATE SEQUENCE downloads_seq;
@@ -36,3 +35,9 @@ WHERE id NOT IN (
 RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+
+-- Create a trigger
+CREATE TRIGGER maintain_last_three_downloads_trigger
+    AFTER INSERT ON downloads
+    FOR EACH ROW EXECUTE FUNCTION maintain_last_three_downloads();

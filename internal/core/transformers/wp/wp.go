@@ -1,5 +1,7 @@
 package transformers
 
+
+type
 // 1. Connect to db
 
 // 2.  process_sources

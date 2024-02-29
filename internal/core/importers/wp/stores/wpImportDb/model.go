@@ -66,12 +66,6 @@ func ToDownload(raw web.Response, sourceID uuid.UUID) Download {
 	}
 }
 
-type Tag struct {
-	ID         uuid.UUID
-	Name       string
-	created_at time.Time
-}
-
 //
 //package cmd
 //

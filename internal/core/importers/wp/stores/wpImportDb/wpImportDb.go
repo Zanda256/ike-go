@@ -102,20 +102,3 @@ func (st *Store) InsertDownload(d Download) (uuid.UUID, error) {
 	fmt.Println("Download inserted successfully.")
 	return d.ID, nil
 }
-
-//docker run -it --rm --network some-network postgres psql -h some-postgres -U postgres
-
-//docker exec -it <container_name> sh
-//Fetch and follow the logs of a container:
-//docker logs -f <container_name>
-//To inspect a running container:
-//docker inspect <container_name> (or <container_id>)
-//
-//Create and run a container from an image, with a custom name:
-//docker run --name <container_name> <image_name>
-//Run a container with and publish a container’s port(s) to the host.
-//docker run -p <host_port>:<container_port> <image_name>
-//Run a container in the background
-//docker run -d <image_name>
-docker volume create postgres-volume
-docker run --name ike-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres --volume postgres-volume:/var/lib/postgresql/data  -d postgres:latest

@@ -15,7 +15,7 @@ type ClientProvider struct {
 type Config struct {
 	// Timeout specifies a time limit for requests made by
 	Timeout int
-	//MaxIdleConns controls the maximum number of idle (keep-alive) connections across all hosts. Zero means no limit.
+	// MaxIdleConns controls the maximum number of idle (keep-alive) connections across all hosts. Zero means no limit.
 	MaxIdleConns int
 	// MaxIdleConnsPerHost, if non-zero, controls the maximum idle (keep-alive) connections to keep per-host.
 	MaxIdleConnsPerHost int

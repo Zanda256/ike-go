@@ -41,6 +41,9 @@ CREATE TABLE downloads (
     body TEXT,
 
     PRIMARY KEY (id)
+    CONSTRAINT fk_source
+     FOREIGN KEY(source_id)
+         REFERENCES sources(id)
 );
 
 CREATE TABLE documents (
@@ -56,6 +59,15 @@ CREATE TABLE documents (
     wp_version VARCHAR(10),
 
     PRIMARY KEY (id)
+
+    CONSTRAINT fk_source
+        FOREIGN KEY(source_id)
+        REFERENCES sources(id)
+    CONSTRAINT fk_download
+        FOREIGN KEY(download_id)
+        REFERENCES sources(downloads)
+
+
 );
 
 CREATE TABLE chunks (
