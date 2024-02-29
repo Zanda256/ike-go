@@ -40,7 +40,7 @@ CREATE TABLE downloads (
     headers jsonb,
     body TEXT,
 
-    PRIMARY KEY (user_id)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE documents (

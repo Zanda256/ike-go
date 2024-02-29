@@ -57,11 +57,16 @@ func (wpi *ImportManager) Import(fullURL string) error { // errChan chan error
 				continue
 			}
 			postURL := fmt.Sprintf("%s/%s", fullURL, id)
-			wpi.fetchAndProcessPost(postURL)
+			s, err := wpi.fetchAndProcessPost(postURL)
+			if err != nil {
+				wpi.log.Error(context.Background(), "error encountered:", err.Error())
+				return err
+			}
+			wpi.log.Info(context.Background(), "success for: ", s)
 		}
 		page += 1
 	}
-
+	return nil
 }
 
 func (wpi *ImportManager) fetchAndProcessPost(url string) (string, error) {

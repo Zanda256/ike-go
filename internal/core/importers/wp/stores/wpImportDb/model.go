@@ -1,4 +1,4 @@
-package wpImportdb
+package wpImportDb
 
 import (
 	"net/url"
@@ -71,3 +71,42 @@ type Tag struct {
 	Name       string
 	created_at time.Time
 }
+
+//
+//package cmd
+//
+//import (
+//"fmt"
+//wpImportdb "github.com/Zanda256/ike-go/internal/core/importers/wp/stores/wpImportDb"
+//"os"
+//
+//"github.com/Zanda256/ike-go/internal/core/importers"
+//"github.com/Zanda256/ike-go/internal/core/importers/wp"
+//"github.com/spf13/cobra"
+//)
+//
+//var store = wpImportdb.NewStore(log, dbClient)
+//
+//var imprtSvc = &importers.ImportService{
+//	WPress: wp.NewWordPressImporter(log, httpClient, store),
+//}
+//
+//// importCmd represents the import command
+//var importCmd = &cobra.Command{
+//	Use:   "import",
+//	Short: "Import raw data",
+//	Long:  `Import  data from  supported  data source`,
+//	Run: func(cmd *cobra.Command, args []string) {
+//		fmt.Println("import called")
+//		if len(args) == 0 {
+//			os.Exit(3)
+//		}
+//	},
+//}
+//
+//func init() {
+//	rootCmd.AddCommand(importCmd)
+//
+//	importCmd.PersistentFlags().String("wordpress", "wp", "import from a wordpress source")
+//}
+//

@@ -60,6 +60,7 @@ func Open(ctx context.Context, cfg Config) (*DB, error) {
 	if cfg.DisableTLS {
 		sslMode = "disable"
 	}
+	fmt.Println(cfg)
 
 	q := make(url.Values)
 	q.Set("sslmode", sslMode)
