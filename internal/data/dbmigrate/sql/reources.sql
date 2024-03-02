@@ -10,15 +10,15 @@ CREATE TYPE code_languages AS ENUM ('NOT_YET_KNOWN', 'FIND_OUT');
 CREATE TABLE sources (
     id UUID,
     author_email TEXT,
-    raw_url TEXT,
-    scheme TEXT,
-    host TEXT,
-    path TEXT,
+    raw_url TEXT NOT NULL,
+    scheme TEXT NOT NULL,
+    host TEXT NOT NULL,
+    path TEXT NOT NULL,
     query TEXT,
-    active_domain boolean,
+    active_domain boolean NOT NULL,
     "format" doc_format NOT NULL,
-    created_at TIMESTAMP  WITH TIME ZONE NOT NULL,
-    updated_at TIMESTAMP  WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP  WITH TIME ZONE,
+    updated_at TIMESTAMP  WITH TIME ZONE,
 
     PRIMARY KEY (id)
 );
@@ -34,13 +34,13 @@ CREATE TABLE tags (
 CREATE TABLE downloads (
     id UUID,
     source_id UUID,
-    attempted_at TIMESTAMP  WITH TIME ZONE NOT NULL,
-    downloaded_at TIMESTAMP  WITH TIME ZONE NOT NULL,
+    attempted_at TIMESTAMP  WITH TIME ZONE,
+    downloaded_at TIMESTAMP  WITH TIME ZONE,
     status_code INTEGER,
-    headers jsonb,
+    headers jsonb NOT NULL,
     body TEXT,
 
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
     CONSTRAINT fk_source
      FOREIGN KEY(source_id)
          REFERENCES sources(id)
@@ -48,24 +48,24 @@ CREATE TABLE downloads (
 
 CREATE TABLE documents (
     id UUID,
-    source_id UUID,
+    source_id UUID NOT NULL,
     download_id UUID,
-    "format" doc_format,
-    indexed_at TIMESTAMP NOT NULL,
-    min_chunk_size INTEGER,
-    max_chunk_size INTEGER,
-    published_at TIMESTAMP  WITH TIME ZONE NOT NULL,
-    modified_at TIMESTAMP  WITH TIME ZONE NOT NULL,
+    "format" doc_format NOT NULL,
+    indexed_at TIMESTAMP,
+    min_chunk_size INTEGER NOT NULL,
+    max_chunk_size INTEGER NOT NULL,
+    published_at TIMESTAMP  WITH TIME ZONE,
+    modified_at TIMESTAMP  WITH TIME ZONE,
     wp_version VARCHAR(10),
 
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
 
     CONSTRAINT fk_source
         FOREIGN KEY(source_id)
-        REFERENCES sources(id)
+        REFERENCES sources(id),
     CONSTRAINT fk_download
         FOREIGN KEY(download_id)
-        REFERENCES sources(downloads)
+        REFERENCES downloads(id)
 
 
 );
@@ -76,11 +76,11 @@ CREATE TABLE chunks (
     parent_chunk_id UUID,
     left_chunk_id UUID,
     right_chunk_id UUID,
-    body TEXT,
-    byte_size INTEGER,
-    tokenizer VARCHAR(255),
-    token_count INTEGER,
-    natural_lang natural_languages,
+    body TEXT NOT NULL,
+    byte_size INTEGER NOT NULL,
+    tokenizer VARCHAR(255) NOT NULL,
+    token_count INTEGER NOT NULL,
+    natural_lang natural_languages NOT NULL,
     code_lang code_languages,
 
     PRIMARY KEY (id)
@@ -98,9 +98,9 @@ CREATE TABLE document_tags (
 CREATE TABLE document_meta (
     id UUID,
     document_id UUID,
-    "key" VARCHAR(255),
+    "key" VARCHAR(255) NOT NULL,
     meta JSONB,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE,
 
     PRIMARY KEY (id)
 );
@@ -110,9 +110,9 @@ CREATE TABLE embeddings (
     embedding_1536 , -- Fill in type
     embedding_3072 , -- Fill in type
     model VARCHAR(255),
-    embedded_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    "object_id" UUID,
-    object_type VARCHAR(20),
+    embedded_at TIMESTAMP WITH TIME ZONE,
+    "object_id" UUID NOT NULL,
+    object_type VARCHAR(20) NOT NULL,
     embedding_768 , -- Fill in type
 
     PRIMARY KEY (id)
@@ -120,9 +120,9 @@ CREATE TABLE embeddings (
 
 CREATE TABLE requests (
     id UUID,
-    "message" TEXT,
+    "message" TEXT NOT NULL,
     meta JSONB,
-    requested_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    requested_at TIMESTAMP WITH TIME ZONE,
     result_chunks[] UUID,
 
     PRIMARY KEY (id)

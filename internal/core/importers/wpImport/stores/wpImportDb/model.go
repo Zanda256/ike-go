@@ -71,18 +71,18 @@ func ToDownload(raw web.Response, sourceID uuid.UUID) Download {
 //
 //import (
 //"fmt"
-//wpImportdb "github.com/Zanda256/ike-go/internal/core/importers/wp/stores/wpImportDb"
+//wpImportdb "github.com/Zanda256/ike-go/internal/core/importers/wpImport/stores/wpImportDb"
 //"os"
 //
 //"github.com/Zanda256/ike-go/internal/core/importers"
-//"github.com/Zanda256/ike-go/internal/core/importers/wp"
+//"github.com/Zanda256/ike-go/internal/core/importers/wpImport"
 //"github.com/spf13/cobra"
 //)
 //
 //var store = wpImportdb.NewStore(log, dbClient)
 //
 //var imprtSvc = &importers.ImportService{
-//	WPress: wp.NewWordPressImporter(log, httpClient, store),
+//	WPress: wpImport.NewWordPressImporter(log, httpClient, store),
 //}
 //
 //// importCmd represents the import command
@@ -101,6 +101,6 @@ func ToDownload(raw web.Response, sourceID uuid.UUID) Download {
 //func init() {
 //	rootCmd.AddCommand(importCmd)
 //
-//	importCmd.PersistentFlags().String("wordpress", "wp", "import from a wordpress source")
+//	importCmd.PersistentFlags().String("wordpress", "wpImport", "import from a wordpress source")
 //}
 //

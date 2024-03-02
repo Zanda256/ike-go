@@ -10,7 +10,7 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type DB struct {
@@ -80,7 +80,7 @@ func Open(ctx context.Context, cfg Config) (*DB, error) {
 		RawQuery: q.Encode(),
 	}
 
-	dbPool, err := pgxpool.Connect(ctx, u.String())
+	dbPool, err := pgxpool.New(ctx, u.String())
 	if err != nil {
 		return nil, fmt.Errorf("connect to database: %w", err)
 	}

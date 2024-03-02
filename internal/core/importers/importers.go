@@ -1,11 +1,11 @@
 package importers
 
 import (
-	"github.com/Zanda256/ike-go/internal/core/importers/wp"
+	"github.com/Zanda256/ike-go/internal/core/importers/wpImport"
 )
 
 type ImportService struct {
-	WPress *wp.ImportManager
+	WPress *wpImport.ImportManager
 	// Add import managers here
 }
 

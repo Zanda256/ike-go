@@ -1,4 +1,4 @@
-package wp
+package wpImport
 
 import (
 	"context"
@@ -6,15 +6,15 @@ import (
 	"fmt"
 	"net/http"
 
-	wpImportdb "github.com/Zanda256/ike-go/internal/core/importers/wp/stores/wpImportDb"
+	"github.com/Zanda256/ike-go/internal/core/importers/wpImport/stores/wpImportDb"
 	"github.com/Zanda256/ike-go/pkg-foundation/logger"
 	"github.com/Zanda256/ike-go/pkg-foundation/web"
 	"github.com/google/uuid"
 )
 
 type Storer interface {
-	InsertSource(s wpImportdb.Source) (uuid.UUID, error)
-	InsertDownload(d wpImportdb.Download) (uuid.UUID, error)
+	InsertSource(s wpImportDb.Source) (uuid.UUID, error)
+	InsertDownload(d wpImportDb.Download) (uuid.UUID, error)
 }
 
 type ImportManager struct {
@@ -76,7 +76,7 @@ func (wpi *ImportManager) fetchAndProcessPost(url string) (string, error) {
 		return "", err
 	}
 	// convert URL to source and save it to db
-	source, err := wpImportdb.ToSource(url)
+	source, err := wpImportDb.ToSource(url)
 	if err != nil {
 		wpi.log.Error(context.Background(), err.Error())
 		return "", err
@@ -88,7 +88,7 @@ func (wpi *ImportManager) fetchAndProcessPost(url string) (string, error) {
 	}
 	fmt.Printf("Source ID: %s", source.ID.String())
 	// build the download struct and save it to db
-	download := wpImportdb.ToDownload(res, source.ID)
+	download := wpImportDb.ToDownload(res, source.ID)
 	did, err := wpi.Storage.InsertDownload(download)
 	if err != nil {
 		wpi.log.Error(context.Background(), err.Error())

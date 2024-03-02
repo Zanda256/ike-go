@@ -1,7 +1,15 @@
 package transformers
 
+import (
+	"github.com/Zanda256/ike-go/internal/core/importers/wpImport/stores/wpImportDb"
+	"github.com/google/uuid"
+)
 
-type
+type Storer interface {
+	GetSourcesByHosts(hosts []string) ([]wpImportDb.Source, error)
+	GetDownloadBySource(sourceID uuid.UUID) (wpImportDb.Download, error)
+}
+
 // 1. Connect to db
 
 // 2.  process_sources
