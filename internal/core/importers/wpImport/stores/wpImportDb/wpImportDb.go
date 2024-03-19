@@ -9,19 +9,19 @@ import (
 	"github.com/google/uuid"
 )
 
-type Store struct {
+type ImportStore struct {
 	log *logger.Logger
 	db  *dbsql.DB
 }
 
-func NewStore(log *logger.Logger, db *dbsql.DB) *Store {
-	return &Store{
+func NewStore(log *logger.Logger, db *dbsql.DB) *ImportStore {
+	return &ImportStore{
 		log: log,
 		db:  db,
 	}
 }
 
-func (st *Store) InsertSource(s Source) (uuid.UUID, error) {
+func (st *ImportStore) InsertSource(s Source) (uuid.UUID, error) {
 	ctx := context.Background()
 	// Begin a new transaction
 	tx, err := st.db.Begin(ctx)
@@ -62,7 +62,7 @@ func (st *Store) InsertSource(s Source) (uuid.UUID, error) {
 	return s.ID, nil
 }
 
-func (st *Store) InsertDownload(d Download) (uuid.UUID, error) {
+func (st *ImportStore) InsertDownload(d Download) (uuid.UUID, error) {
 	ctx := context.Background()
 	// Begin a new transaction
 	tx, err := st.db.Begin(ctx)

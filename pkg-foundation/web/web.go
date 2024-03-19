@@ -1,7 +1,6 @@
 package web
 
 import (
-	"bytes"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -34,12 +33,7 @@ func NewClientProvider(cfg Config) *ClientProvider {
 	return &ClientProvider{client: client}
 }
 
-func (cp *ClientProvider) SendRequest(method, endpoint string, reqBody []byte) (Response, error) {
-	req, err := http.NewRequest(method, endpoint, bytes.NewBuffer(reqBody))
-	if err != nil {
-		return Response{}, err
-	}
-
+func (cp *ClientProvider) SendRequest(req *http.Request) (Response, error) {
 	response, err := cp.client.Do(req)
 	if err != nil {
 		return Response{}, err

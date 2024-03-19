@@ -12,6 +12,8 @@ import (
 	"github.com/google/uuid"
 )
 
+// Import url - https://wsform.com/wp-json/wp/v2/knowledgebase
+
 type Storer interface {
 	InsertSource(s wpImportDb.Source) (uuid.UUID, error)
 	InsertDownload(d wpImportDb.Download) (uuid.UUID, error)
@@ -36,7 +38,11 @@ func (wpi *ImportManager) Import(fullURL string) error { // errChan chan error
 	page := 1
 	for {
 		url := fmt.Sprintf("%s?page=%d&per_page=%d", fullURL, page, resultsPerPage)
-		resp, err := wpi.webClient.SendRequest(http.MethodGet, url, nil)
+		req, err := http.NewRequest(http.MethodGet, url, nil)
+		if err != nil {
+			return err
+		}
+		resp, err := wpi.webClient.SendRequest(req)
 		if err != nil {
 			wpi.log.Error(context.Background(), "error encountered:", err.Error())
 			return err
@@ -44,13 +50,13 @@ func (wpi *ImportManager) Import(fullURL string) error { // errChan chan error
 		if resp.StatusCode == 400 {
 			break
 		}
-		var m []map[string]any
-		err = json.Unmarshal(resp.Body, m)
+		var apiResults []map[string]any
+		err = json.Unmarshal(resp.Body, apiResults)
 		if err != nil {
 			wpi.log.Error(context.Background(), "error encountered:", err.Error())
 			return err
 		}
-		for _, result := range m {
+		for _, result := range apiResults {
 			id, ok := result["id"]
 			if !ok {
 				wpi.log.Warn(context.Background(), "no id found, skipping record")
@@ -70,7 +76,11 @@ func (wpi *ImportManager) Import(fullURL string) error { // errChan chan error
 }
 
 func (wpi *ImportManager) fetchAndProcessPost(url string) (string, error) {
-	res, err := wpi.webClient.SendRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return "", err
+	}
+	res, err := wpi.webClient.SendRequest(req)
 	if err != nil {
 		wpi.log.Error(context.Background(), "error encountered:", err.Error())
 		return "", err

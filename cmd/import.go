@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/Zanda256/ike-go/internal/core/importers"
 	"github.com/Zanda256/ike-go/internal/core/importers/wpImport"
 	"github.com/Zanda256/ike-go/internal/core/importers/wpImport/stores/wpImportDb"
@@ -23,14 +24,15 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	//Args: cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			return fmt.Errorf("import command requires atleast one argument")
 		}
-		err := svc.ImportWP(args)
-		if err != nil {
-			return err
-		}
+		//err := svc.ImportWP(args)
+		//if err != nil {
+		//	return err
+		//}
 		return nil
 	},
 }

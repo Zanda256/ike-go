@@ -1,5 +1,5 @@
 -- Version: 1.01
--- Description: Create table sources
+-- Description: Create resource tables
 CREATE TYPE doc_format AS ENUM ('DOC_FORMAT_JSON', 'DOC_FORMAT_YAML');
 
 CREATE TYPE natural_languages AS ENUM ('EN', 'FR');

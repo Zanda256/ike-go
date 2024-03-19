@@ -104,6 +104,8 @@ func StatusCheck(ctx context.Context, db *DB) error {
 		}
 		time.Sleep(time.Duration(attempts) * 100 * time.Millisecond)
 		if ctx.Err() != nil {
+			fmt.Println(pingError)
+			fmt.Println(ctx.Err())
 			return ctx.Err()
 		}
 	}
@@ -121,5 +123,5 @@ func StatusCheck(ctx context.Context, db *DB) error {
 		return err
 	}
 	defer tx.Rollback(ctx)
-	return tx.QueryRow(ctx, q, nil).Scan(&tmp)
+	return tx.QueryRow(ctx, q).Scan(&tmp)
 }
