@@ -78,7 +78,7 @@ func (st *ImportStore) InsertDownload(d Download) (uuid.UUID, error) {
 	}()
 
 	// Prepare the SQL statement
-	_, err = tx.Prepare(ctx, "insert_download", "INSERT INTO downloads (id, source_id, created_at, updated_at, status_code, headers, body) VALUES ($1, $2, $3, $4, $5, $6, $7)")
+	_, err = tx.Prepare(ctx, "insert_download", "INSERT INTO downloads (id, source_id, attempted_at, downloaded_at, status_code, headers, body) VALUES ($1, $2, $3, $4, $5, $6, $7)")
 	if err != nil {
 		return uuid.Nil, err
 	}
@@ -88,8 +88,8 @@ func (st *ImportStore) InsertDownload(d Download) (uuid.UUID, error) {
 		"insert_download",
 		d.ID,
 		d.SourceID,
-		d.CreatedAt,
-		d.UpdatedAt,
+		d.AttemptedAt,
+		d.DownloadedAt,
 		d.StatusCode,
 		d.Headers,
 		d.Body,

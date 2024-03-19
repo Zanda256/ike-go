@@ -8,7 +8,11 @@ import (
 	"github.com/google/uuid"
 )
 
-const JSONFormat = "json"
+const JSONFormat = "DOC_FORMAT_JSON"
+
+type APIResult struct {
+	ID int `json:"id"`
+}
 
 type Source struct {
 	ID           uuid.UUID
@@ -45,21 +49,19 @@ func ToSource(postURL string) (Source, error) {
 }
 
 type Download struct {
-	ID         uuid.UUID
-	SourceID   uuid.UUID
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	StatusCode int
-	Headers    []byte
-	Body       []byte
+	ID           uuid.UUID
+	SourceID     uuid.UUID
+	AttemptedAt  time.Time
+	DownloadedAt time.Time
+	StatusCode   int
+	Headers      []byte
+	Body         []byte
 }
 
 func ToDownload(raw web.Response, sourceID uuid.UUID) Download {
 	return Download{
 		ID:         uuid.New(),
 		SourceID:   sourceID,
-		CreatedAt:  time.Now(),
-		UpdatedAt:  time.Now(),
 		StatusCode: raw.StatusCode,
 		Headers:    raw.Headers,
 		Body:       raw.Body,

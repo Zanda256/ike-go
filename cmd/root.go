@@ -107,20 +107,38 @@ var initConfig = func() {
 }
 
 func init() {
-	initConfig()
+	//cobra.OnInitialize(initConfig)
 
-	var err error
-	fmt.Printf("\n%+v\n", cfg)
-	dbClient, err = dbsql.Open(context.Background(), cfg.Db)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(2)
-	}
-	if err = dbsql.StatusCheck(context.Background(), dbClient); err != nil {
-		fmt.Printf("\ndbsql.StatusCheck: %+v\n", err.Error())
-		os.Exit(3)
-	}
-	httpClient = web.NewClientProvider(cfg.Web)
+	//var err error
+	//fmt.Printf("\n%+v\n", cfg)
+	//dbClient, err = dbsql.Open(context.Background(), cfg.Db)
+	//if err != nil {
+	//	fmt.Println(err)
+	//	os.Exit(2)
+	//}
+	//if err = dbsql.StatusCheck(context.Background(), dbClient); err != nil {
+	//	fmt.Printf("\ndbsql.StatusCheck: %+v\n", err.Error())
+	//	os.Exit(3)
+	//}
+	//httpClient = web.NewClientProvider(cfg.Web)
+	//
+	//log = logger.NewWithEvents(os.Stdout, logger.LevelInfo, "ike-go", traceIDFunc, events)
 
-	log = logger.NewWithEvents(os.Stdout, logger.LevelInfo, "ike-go", traceIDFunc, events)
+	fmt.Printf("\nroot init running\n")
+	//if dbClient == nil {
+	//	fmt.Printf("\ndbClient pointer is nil\n")
+	//} else {
+	//	fmt.Printf("\ndbClient pointer is not nil\n")
+	//}
+	//if httpClient == nil {
+	//	fmt.Printf("\nhttpClient pointer is nil\n")
+	//} else {
+	//	fmt.Printf("\nhttpClient pointer is not nil\n")
+	//}
+	//if log == nil {
+	//	fmt.Printf("\nroot.log pointer is nil\n")
+	//	//imp.Log.Info(context.Background(), "log pointer is not nil")
+	//} else {
+	//	fmt.Printf("\nroot.log pointer is not nil\n")
+	//}
 }
